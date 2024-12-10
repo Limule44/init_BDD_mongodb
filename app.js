@@ -52,20 +52,20 @@ app.get('/articles', async (request, response) => {
 });
 
 app.get('/article/:id', async (request, response) => {
-        // Récupérer le param de l'url
-        const idParam = request.params.id;
+    // Récupérer le param de l'url
+    const idParam = request.params.id;
 
-        // Récupérer dans la base, le produit avec l'id saisie
-        const foundArticles = await Articles.findOne({'_id' : idParam})
+    // Récupérer dans la base, le produit avec l'id saisie
+    const foundArticles = await Articles.findOne({'_id' : idParam})
     
-        //RG-003 : Si l'id n'existe pas en base code 705
-        if (!foundArticles){
-            return response.json({ code : "705" })
-        }
-        console.log(foundArticles);
+    //RG-003 : Si l'id n'existe pas en base code 705
+    if (!foundArticles){
+        return response.json({ code : "705" })
+    }
+    console.log(foundArticles);
     
-        //RG-004 : Sinon on retourne le produit trouvé
-        return response.json(foundArticles);
+    //RG-004 : Sinon on retourne le produit trouvé
+    return response.json(foundArticles);
 });
 
 app.post('/save-article', async (request, response) => {
@@ -89,7 +89,14 @@ app.post('/save-article', async (request, response) => {
 
 app.delete('/article/:id', async (request, response) => {
     const idParam = request.params.id;
-
+    const deleteArticles = await Articles.deletebyid({'_id' : idParam})
+    if (deleteArticles) {
+        return response.json({ message : "Article supprimés avec succès" })
+    }
+    const foundIdArticles = await Articles.findById({'_id' : idParam})
+    if (!foundIdArticles) {
+        return response.json({ message : "Article non trouvé" })
+    }
 });
 
 // ================================================
